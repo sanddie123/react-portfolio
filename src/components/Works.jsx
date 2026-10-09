@@ -1,10 +1,12 @@
 import { Fragment, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { copy, t } from "../data/copy";
 import { workOrder, works } from "../data/works";
 import { usePortfolio } from "../context/PortfolioContext";
 import ConstellationCanvas from "./ConstellationCanvas";
 
 const CARD_COUNT = workOrder.length;
+const TRACK_EASE = "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
 
 function getCoverflowStyle(index, activeIndex) {
   const maxDiff = Math.floor(CARD_COUNT / 2);
@@ -38,6 +40,68 @@ function renderTitle(title) {
   ));
 }
 
+function logicalIndexFromTrack(trackIndex, total) {
+  if (total <= 1) return 0;
+  if (trackIndex <= 0) return total - 1;
+  if (trackIndex >= total + 1) return 0;
+  return trackIndex - 1;
+}
+
+function loopSlides(images) {
+  if (images.length <= 1) return images;
+  return [images[images.length - 1], ...images, images[0]];
+}
+
+function isMobileViewport() {
+  return window.matchMedia("(max-width: 768px)").matches;
+}
+
+function PrevIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M17.59 18L19 16.59 14.42 12 19 7.41 17.59 6l-6 6z" />
+      <path d="M11.59 18L13 16.59 8.42 12 13 7.41 11.59 6l-6 6z" />
+    </svg>
+  );
+}
+
+function NextIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6.41 6L5 7.41 9.58 12 5 16.59 6.41 18l6-6z" />
+      <path d="M12.41 6L11 7.41 15.58 12 11 16.59 12.41 18l6-6z" />
+    </svg>
+  );
+}
+
+function Pager({ id, countId, prevId, nextId, count, hidden, onPrev, onNext }) {
+  return (
+    <div className={`panel-pager${hidden ? " hidden-pager" : ""}`} id={id}>
+      <button
+        type="button"
+        className="panel-pager-btn"
+        id={prevId}
+        aria-label="Previous image"
+        onClick={onPrev}
+      >
+        <PrevIcon />
+      </button>
+      <span className="panel-pager-count" id={countId}>
+        {count}
+      </span>
+      <button
+        type="button"
+        className="panel-pager-btn"
+        id={nextId}
+        aria-label="Next image"
+        onClick={onNext}
+      >
+        <NextIcon />
+      </button>
+    </div>
+  );
+}
+
 export default function Works() {
   const { language, panelOpen, setPanelOpen, setScrollLocked } = usePortfolio();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -46,8 +110,11 @@ export default function Works() {
   );
   const [activeWorkId, setActiveWorkId] = useState(null);
   const [imageIndex, setImageIndex] = useState(0);
-  const [techStackSnapshot, setTechStackSnapshot] = useState(null);
+  const [trackIndex, setTrackIndex] = useState(0);
   const [trackInstant, setTrackInstant] = useState(false);
+  const [panelShown, setPanelShown] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const [techStackSnapshot, setTechStackSnapshot] = useState(null);
   const [modal, setModal] = useState({
     active: false,
     mode: "image",
@@ -59,22 +126,32 @@ export default function Works() {
   const isTransitioningRef = useRef(false);
   const panelOpenRef = useRef(panelOpen);
   const modalActiveRef = useRef(false);
+  const modalModeRef = useRef(modal.mode);
   const autoplayRef = useRef(null);
   const panelAutoplayRef = useRef(null);
   const carouselRef = useRef(null);
   const panelRef = useRef(null);
+  const panelTrackRef = useRef(null);
+  const panelImageRef = useRef(null);
+  const modalFrameRef = useRef(null);
   const videoRef = useRef(null);
   const imagesRef = useRef([]);
   const imageIndexRef = useRef(0);
+  const trackIndexRef = useRef(0);
   const languageRef = useRef(language);
+  const stepPanelRef = useRef(() => {});
+  const stepModalRef = useRef(() => {});
 
   panelOpenRef.current = panelOpen;
   modalActiveRef.current = modal.active;
+  modalModeRef.current = modal.mode;
   imageIndexRef.current = imageIndex;
+  trackIndexRef.current = trackIndex;
   languageRef.current = language;
 
   const activeWork = activeWorkId ? works[activeWorkId] : null;
-  imagesRef.current = activeWork?.images || [];
+  const images = activeWork?.images || [];
+  imagesRef.current = images;
 
   const stopAutoplay = () => {
     if (autoplayRef.current) {
@@ -104,21 +181,56 @@ export default function Works() {
     stopPanelAutoplay();
     if (imagesRef.current.length <= 1) return;
     panelAutoplayRef.current = setInterval(() => {
-      if (!modalActiveRef.current) {
-        setImageIndex((current) => (current + 1) % imagesRef.current.length);
-      }
+      if (!modalActiveRef.current) stepPanelRef.current(1);
     }, 3000);
   };
+
+  const stepPanel = (direction) => {
+    const total = imagesRef.current.length;
+    if (total <= 1) return;
+
+    let index = trackIndexRef.current;
+    if (index === total + 1 || index === 0) {
+      index = index === total + 1 ? 1 : total;
+      trackIndexRef.current = index;
+      flushSync(() => {
+        setTrackInstant(true);
+        setTrackIndex(index);
+      });
+      panelTrackRef.current?.offsetHeight;
+      flushSync(() => {
+        setTrackInstant(false);
+      });
+    }
+
+    index += direction;
+    trackIndexRef.current = index;
+    const logical = logicalIndexFromTrack(index, total);
+    imageIndexRef.current = logical;
+    setTrackIndex(index);
+    setImageIndex(logical);
+  };
+  stepPanelRef.current = stepPanel;
+
+  const stepModal = (direction) => {
+    const total = imagesRef.current.length;
+    if (total === 0) return;
+    setModal((current) => {
+      if (current.mode !== "image") return current;
+      return {
+        ...current,
+        imageIndex: (current.imageIndex + direction + total) % total,
+      };
+    });
+  };
+  stepModalRef.current = stepModal;
 
   useEffect(() => {
     const onResize = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
-      if (mobile) {
-        stopAutoplay();
-      } else {
-        startAutoplay();
-      }
+      if (mobile) stopAutoplay();
+      else startAutoplay();
     };
 
     window.addEventListener("resize", onResize);
@@ -164,6 +276,67 @@ export default function Works() {
     return () => document.removeEventListener("click", onDocumentClick);
   }, []);
 
+  useEffect(() => {
+    const bindHorizontalSwipe = (el, onSwipe) => {
+      if (!el) return () => {};
+      let startX = 0;
+      let startY = 0;
+      let tracking = false;
+      let swiped = false;
+
+      const onStart = (event) => {
+        if (!isMobileViewport() || event.touches.length !== 1) return;
+        if (event.target.closest(".panel-pager, .tactical-arrow")) return;
+        startX = event.touches[0].clientX;
+        startY = event.touches[0].clientY;
+        tracking = true;
+        swiped = false;
+      };
+
+      const onEnd = (event) => {
+        if (!tracking) return;
+        tracking = false;
+        const touch = event.changedTouches[0];
+        const dx = touch.clientX - startX;
+        const dy = touch.clientY - startY;
+        if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy)) return;
+        swiped = true;
+        onSwipe(dx < 0 ? 1 : -1);
+      };
+
+      const onClick = (event) => {
+        if (!swiped) return;
+        event.preventDefault();
+        event.stopPropagation();
+        swiped = false;
+      };
+
+      el.addEventListener("touchstart", onStart, { passive: true });
+      el.addEventListener("touchend", onEnd, { passive: true });
+      el.addEventListener("click", onClick, true);
+      return () => {
+        el.removeEventListener("touchstart", onStart);
+        el.removeEventListener("touchend", onEnd);
+        el.removeEventListener("click", onClick, true);
+      };
+    };
+
+    const unbindPanel = bindHorizontalSwipe(panelImageRef.current, (direction) => {
+      stepPanelRef.current(direction);
+      stopPanelAutoplay();
+      startPanelAutoplay();
+    });
+    const unbindModal = bindHorizontalSwipe(modalFrameRef.current, (direction) => {
+      if (!modalActiveRef.current || modalModeRef.current !== "image") return;
+      stepModalRef.current(direction);
+    });
+
+    return () => {
+      unbindPanel();
+      unbindModal();
+    };
+  }, []);
+
   const moveNext = () => {
     if (isTransitioningRef.current || panelOpenRef.current) return;
     setActiveIndex((current) => (current + 1) % CARD_COUNT);
@@ -180,10 +353,19 @@ export default function Works() {
     stopAutoplay();
 
     const data = works[workId];
+    const nextImages = data.images || [];
+    const startTrack = nextImages.length > 1 ? 1 : 0;
+    imagesRef.current = nextImages;
+    trackIndexRef.current = startTrack;
+    imageIndexRef.current = 0;
+
     if (panelRef.current) panelRef.current.scrollTop = 0;
     setActiveWorkId(workId);
     setImageIndex(0);
+    setTrackIndex(startTrack);
     setTrackInstant(true);
+    setClosing(false);
+    setPanelShown(true);
     if (data.techStack && data.techStack.length > 0) {
       setTechStackSnapshot({
         label: t(copy.works.techStack, languageRef.current),
@@ -200,23 +382,27 @@ export default function Works() {
       setTrackInstant(false);
     }, 50);
 
+    startPanelAutoplay();
+
     window.setTimeout(() => {
-      startPanelAutoplay();
       isTransitioningRef.current = false;
-    }, 500);
+    }, isMobileViewport() ? 500 : 1000);
   };
 
   const closePanel = () => {
-    if (isTransitioningRef.current) return;
+    if (isTransitioningRef.current || !panelOpenRef.current) return;
     isTransitioningRef.current = true;
     stopPanelAutoplay();
+    setClosing(true);
     setPanelOpen(false);
     setScrollLocked(false);
 
     window.setTimeout(() => {
+      setPanelShown(false);
+      setClosing(false);
       startAutoplay();
       isTransitioningRef.current = false;
-    }, 500);
+    }, isMobileViewport() ? 500 : 400);
   };
 
   const onCardClick = (workId, diff) => {
@@ -244,29 +430,15 @@ export default function Works() {
     startAutoplay();
   };
 
-  const nextPanelImage = () => {
-    if (imagesRef.current.length <= 1) return;
-    setImageIndex((current) => (current + 1) % imagesRef.current.length);
-  };
-
-  const prevPanelImage = () => {
-    if (imagesRef.current.length <= 1) return;
-    setImageIndex(
-      (current) =>
-        (current - 1 + imagesRef.current.length) % imagesRef.current.length,
-    );
-  };
-
-  const onPanelArrow = (event, direction) => {
+  const onPanelStep = (event, direction) => {
     event.stopPropagation();
-    if (direction === "next") nextPanelImage();
-    else prevPanelImage();
+    stepPanel(direction);
     stopPanelAutoplay();
     startPanelAutoplay();
   };
 
   const openImageModal = (event) => {
-    if (event.target.closest(".tactical-arrow")) return;
+    if (event.target.closest(".panel-pager")) return;
     if (imagesRef.current.length === 0) return;
     stopPanelAutoplay();
     setModal({
@@ -296,8 +468,14 @@ export default function Works() {
     }
 
     if (modal.mode === "image") {
+      const total = imagesRef.current.length;
+      const logical = modal.imageIndex;
+      const nextTrack = total > 1 ? logical + 1 : 0;
+      trackIndexRef.current = nextTrack;
+      imageIndexRef.current = logical;
       setTrackInstant(true);
-      setImageIndex(modal.imageIndex);
+      setTrackIndex(nextTrack);
+      setImageIndex(logical);
       window.setTimeout(() => setTrackInstant(false), 50);
     }
 
@@ -310,6 +488,7 @@ export default function Works() {
     if (
       event.target.closest("#enlarged-image") ||
       event.target.closest("#enlarged-video") ||
+      event.target.closest("#modal-pager") ||
       event.target.closest(".tactical-arrow")
     ) {
       return;
@@ -317,40 +496,18 @@ export default function Works() {
     closeModal();
   };
 
-  const onModalNext = (event) => {
+  const onModalArrow = (event, direction) => {
     event.stopPropagation();
-    setModal((current) => {
-      if (current.mode === "image") {
-        return {
-          ...current,
-          imageIndex: (current.imageIndex + 1) % imagesRef.current.length,
-        };
-      }
-      return {
-        ...current,
-        videoIndex: (current.videoIndex + 1) % current.videos.length,
-      };
-    });
-  };
-
-  const onModalPrev = (event) => {
-    event.stopPropagation();
-    setModal((current) => {
-      if (current.mode === "image") {
-        return {
-          ...current,
-          imageIndex:
-            (current.imageIndex - 1 + imagesRef.current.length) %
-            imagesRef.current.length,
-        };
-      }
-      return {
-        ...current,
-        videoIndex:
-          (current.videoIndex - 1 + current.videos.length) %
-          current.videos.length,
-      };
-    });
+    if (modal.mode === "image") {
+      stepModal(direction);
+      return;
+    }
+    setModal((current) => ({
+      ...current,
+      videoIndex:
+        (current.videoIndex + direction + current.videos.length) %
+        current.videos.length,
+    }));
   };
 
   useEffect(() => {
@@ -369,11 +526,11 @@ export default function Works() {
       });
   }, [modal.active, modal.mode, modal.videoIndex, modal.videos]);
 
-  const showPanelArrows = (activeWork?.images.length || 0) > 1;
-  const showModalArrows =
-    modal.mode === "image"
-      ? (activeWork?.images.length || 0) > 1
-      : modal.videos.length > 1;
+  const showPanelPager = images.length > 1;
+  const showModalPager = modal.mode === "image" && images.length > 1;
+  const showModalArrows = modal.mode === "video" && modal.videos.length > 1;
+  const panelCount = `${imageIndex + 1} / ${Math.max(images.length, 1)}`;
+  const modalCount = `${modal.imageIndex + 1} / ${Math.max(images.length, 1)}`;
 
   return (
     <section
@@ -393,10 +550,7 @@ export default function Works() {
         >
           <div className="carousel-wrapper">
             <button className="tactical-arrow prev-arrow" id="btn-prev" onClick={onArrowPrev}>
-              <svg viewBox="0 0 24 24">
-                <path d="M17.59 18L19 16.59 14.42 12 19 7.41 17.59 6l-6 6z" />
-                <path d="M11.59 18L13 16.59 8.42 12 13 7.41 11.59 6l-6 6z" />
-              </svg>
+              <PrevIcon />
             </button>
 
             <div className="project-carousel">
@@ -432,10 +586,7 @@ export default function Works() {
             </div>
 
             <button className="tactical-arrow next-arrow" id="btn-next" onClick={onArrowNext}>
-              <svg viewBox="0 0 24 24">
-                <path d="M6.41 6L5 7.41 9.58 12 5 16.59 6.41 18l6-6z" />
-                <path d="M12.41 6L11 7.41 15.58 12 11 16.59 12.41 18l6-6z" />
-              </svg>
+              <NextIcon />
             </button>
           </div>
         </div>
@@ -444,7 +595,7 @@ export default function Works() {
       <div
         id="project-side-panel"
         ref={panelRef}
-        className={`side-panel${panelOpen ? " open" : ""}`}
+        className={`side-panel${panelShown ? " open" : ""}${closing ? " closing" : ""}`}
         data-active-id={activeWorkId || undefined}
       >
         <div className="panel-title">
@@ -458,6 +609,7 @@ export default function Works() {
 
         <div
           id="panel-image"
+          ref={panelImageRef}
           className="panel-image placeholder-img"
           onMouseEnter={stopPanelAutoplay}
           onMouseLeave={() => {
@@ -467,42 +619,31 @@ export default function Works() {
         >
           <div
             id="panel-image-track"
+            ref={panelTrackRef}
             className="panel-image-track"
             style={{
-              transform: `translateX(-${imageIndex * 100}%)`,
-              transition: trackInstant
-                ? "none"
-                : "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)",
+              transform: `translateX(-${trackIndex * 100}%)`,
+              transition: trackInstant ? "none" : TRACK_EASE,
             }}
           >
-            {(activeWork?.images || []).map((url) => (
+            {loopSlides(images).map((url, index) => (
               <div
-                key={url}
+                key={`${url}-${index}`}
                 className="track-img"
                 style={{ backgroundImage: `url('${url}')` }}
               ></div>
             ))}
           </div>
-          <button
-            className={`tactical-arrow panel-arrow prev-arrow${showPanelArrows ? "" : " hidden-arrow"}`}
-            id="panel-btn-prev"
-            onClick={(event) => onPanelArrow(event, "prev")}
-          >
-            <svg viewBox="0 0 24 24">
-              <path d="M17.59 18L19 16.59 14.42 12 19 7.41 17.59 6l-6 6z" />
-              <path d="M11.59 18L13 16.59 8.42 12 13 7.41 11.59 6l-6 6z" />
-            </svg>
-          </button>
-          <button
-            className={`tactical-arrow panel-arrow next-arrow${showPanelArrows ? "" : " hidden-arrow"}`}
-            id="panel-btn-next"
-            onClick={(event) => onPanelArrow(event, "next")}
-          >
-            <svg viewBox="0 0 24 24">
-              <path d="M6.41 6L5 7.41 9.58 12 5 16.59 6.41 18l6-6z" />
-              <path d="M12.41 6L11 7.41 15.58 12 11 16.59 12.41 18l6-6z" />
-            </svg>
-          </button>
+          <Pager
+            id="panel-pager"
+            countId="panel-pager-count"
+            prevId="panel-btn-prev"
+            nextId="panel-btn-next"
+            count={panelCount}
+            hidden={!showPanelPager}
+            onPrev={(event) => onPanelStep(event, -1)}
+            onNext={(event) => onPanelStep(event, 1)}
+          />
         </div>
 
         <div id="panel-desc" className="panel-desc">
@@ -543,7 +684,7 @@ export default function Works() {
                       openVideoModal(link.urls, 0);
                     }}
                   >
-                    {t(link.label, language)}
+                    <span className="btn-label">{t(link.label, language)}</span>
                   </a>
                 );
               }
@@ -556,7 +697,7 @@ export default function Works() {
                   rel="noopener noreferrer"
                   className="sidebar-btn"
                 >
-                  {t(link.label, language)}
+                  <span className="btn-label">{t(link.label, language)}</span>
                 </a>
               );
             })}
@@ -564,7 +705,7 @@ export default function Works() {
         </div>
 
         <button className="close-btn" onClick={closePanel}>
-          {t(copy.works.close, language)}
+          <span className="btn-label">{t(copy.works.close, language)}</span>
         </button>
       </div>
 
@@ -576,25 +717,40 @@ export default function Works() {
         <button
           className={`tactical-arrow modal-arrow prev-arrow${showModalArrows ? "" : " hidden-arrow"}`}
           id="modal-btn-prev"
-          onClick={onModalPrev}
+          onClick={(event) => onModalArrow(event, -1)}
         >
-          <svg viewBox="0 0 24 24">
-            <path d="M17.59 18L19 16.59 14.42 12 19 7.41 17.59 6l-6 6z" />
-            <path d="M11.59 18L13 16.59 8.42 12 13 7.41 11.59 6l-6 6z" />
-          </svg>
+          <PrevIcon />
         </button>
 
         <div className="modal-image-wrapper">
-          <img
-            id="enlarged-image"
-            src={
-              modal.mode === "image" && activeWork
-                ? activeWork.images[modal.imageIndex]
-                : undefined
-            }
-            alt="Enlarged View"
-            style={{ display: modal.mode === "image" ? "block" : "none" }}
-          />
+          <div className="modal-image-frame" ref={modalFrameRef}>
+            <img
+              id="enlarged-image"
+              src={
+                modal.mode === "image" && activeWork
+                  ? activeWork.images[modal.imageIndex]
+                  : undefined
+              }
+              alt="Enlarged View"
+              style={{ display: modal.mode === "image" ? "block" : "none" }}
+            />
+            <Pager
+              id="modal-pager"
+              countId="modal-pager-count"
+              prevId="modal-pager-prev"
+              nextId="modal-pager-next"
+              count={modalCount}
+              hidden={!showModalPager}
+              onPrev={(event) => {
+                event.stopPropagation();
+                stepModal(-1);
+              }}
+              onNext={(event) => {
+                event.stopPropagation();
+                stepModal(1);
+              }}
+            />
+          </div>
           <video
             id="enlarged-video"
             ref={videoRef}
@@ -612,12 +768,9 @@ export default function Works() {
         <button
           className={`tactical-arrow modal-arrow next-arrow${showModalArrows ? "" : " hidden-arrow"}`}
           id="modal-btn-next"
-          onClick={onModalNext}
+          onClick={(event) => onModalArrow(event, 1)}
         >
-          <svg viewBox="0 0 24 24">
-            <path d="M6.41 6L5 7.41 9.58 12 5 16.59 6.41 18l6-6z" />
-            <path d="M12.41 6L11 7.41 15.58 12 11 16.59 12.41 18l6-6z" />
-          </svg>
+          <NextIcon />
         </button>
       </div>
     </section>

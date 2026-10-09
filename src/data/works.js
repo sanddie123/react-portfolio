@@ -1,5 +1,6 @@
 export const workOrder = [
   "vku-internship",
+  "kopart",
   "uav",
   "repair-system",
   "game-tracker-webapp",
@@ -56,6 +57,42 @@ export const works = {
     ],
     cover: "/assets/vku/images/0_image.png",
   },
+  kopart: {
+    category: { en: "E-COMMERCE WEBSITE", th: "เว็บไซต์อีคอมเมิร์ซ" },
+    cardTitle: { en: "Ko Parts Mahachai", th: "โก้ พาร์ท มหาชัย" },
+    title: { en: "Ko Parts Mahachai", th: "โก้ พาร์ท มหาชัย" },
+    techStack: ["WordPress", "WooCommerce", "Ruk-Com Hosting", "DNS Management"],
+    desc: {
+      en: [
+        "Developed a fully functional WordPress e-commerce website for an automotive parts business.",
+        "Implemented a checkout workflow allowing customers to easily purchase items.",
+        "Configured a comprehensive WordPress admin dashboard for store managers to review payment slips, track order statuses, and manage product catalog listings.",
+        "Managed domain configuration, DNS routing, and successfully deployed the website to a live environment using Ruk-Com hosting.",
+      ],
+      th: [
+        "พัฒนาเว็บไซต์อีคอมเมิร์ซด้วย WordPress สำหรับธุรกิจจำหน่ายอะไหล่ยนต์",
+        "สร้างระบบสั่งซื้อสินค้าเพื่อให้ลูกค้าเลือกซื้อสินค้าได้อย่างสะดวกและรวดเร็ว",
+        "สร้างระบบหลังบ้าน (Admin Dashboard) ของ WordPress เพื่อให้ผู้ดูแลร้านสามารถตรวจสอบสลิปการชำระเงิน ติดตามสถานะคำสั่งซื้อ และจัดการรายการสินค้าได้",
+        "จัดการการตั้งค่าโดเมน DNS Routing และนำเว็บไซต์ขึ้นไปใช้งานจริงผ่านบริการ Ruk-Com Hosting",
+      ],
+    },
+    links: [
+      {
+        label: { en: "VISIT WEBSITE", th: "เข้าชมเว็บไซต์" },
+        url: "https://ko2002.com/",
+      },
+    ],
+    images: [
+      "/assets/kopart/images/0_image.png",
+      "/assets/kopart/images/1_image.png",
+      "/assets/kopart/images/2_image.png",
+      "/assets/kopart/images/3_image.png",
+      "/assets/kopart/images/4_image.png",
+      "/assets/kopart/images/5_image.png",
+      "/assets/kopart/images/6_image.png",
+    ],
+    cover: "/assets/kopart/images/0_image.png",
+  },
   uav: {
     category: { en: "WEB APPLICATION", th: "เว็บแอปพลิเคชัน" },
     cardTitle: {
@@ -82,10 +119,10 @@ export const works = {
         "Implemented automated SMTP email alerts for critical safety warnings and a CSV export feature for data analysis.",
       ],
       th: [
-        "พัฒนา Full-stack แอปพลิเคชันด้วย Flask และฐานข้อมูล SQLite เพื่อประมวลผลข้อมูลเซ็นเซอร์สิ่งแวดล้อมแบบเรียลไทม์",
-        "บูรณาการ Machine Learning Model เพื่อทำนายระดับความเสี่ยงในการเกิดดินถล่มโดยอาศัยข้อมูลความชื้นในดิน แรงสั่นสะเทือน และความเอียง",
-        "สร้าง Frontend ที่รองรับทุกหน้าจอด้วย Bootstrap พร้อมการอัปเดตข้อมูลแบบสดผ่าน Socket.IO แผนที่ Leaflet.js และกราฟ Chart.js",
-        "ติดตั้งระบบแจ้งเตือนอีเมลอัตโนมัติผ่าน SMTP สำหรับคำเตือนด้านความปลอดภัยที่สำคัญ และฟีเจอร์ส่งออกข้อมูลเป็น CSV",
+        "พัฒนาเว็บแอปพลิเคชัน Full-stack ด้วย Flask ร่วมกับใช้ฐานข้อมูล SQLite เพื่อประมวลผลข้อมูลเซ็นเซอร์แบบเรียลไทม์",
+        "ผสานโมเดล Machine Learning เพื่อทำนายคะแนนความเสี่ยงของดินถล่มโดยอ้างอิงจากการวัดความชื้นในดิน การสั่นสะเทือน และความเอียง",
+        "สร้าง Responsive Frontend ด้วย Bootstrap พร้อมการอัปเดตแบบเรียลไทม์ผ่าน Socket.IO, แผนที่แบบโต้ตอบ Leaflet.js และการแสดงผลข้อมูลด้วย Chart.js",
+        "มีระบบแจ้งเตือนความปลอดภัยขั้นวิกฤตอัตโนมัติผ่านอีเมล (SMTP) และฟีเจอร์การส่งออกไฟล์ CSV สำหรับนำไปใช้ในการวิเคราะห์ข้อมูล",
       ],
     },
     links: [
@@ -125,16 +162,16 @@ export const works = {
     techStack: ["HTML/CSS/JS", "PHP", "MySQL", "Bootstrap"],
     desc: {
       en: [
-        "Developed a full-stack repair management platform to track maintenance tickets, device statuses, and service workflows.",
-        "Architected a robust backend structure with a relational database to handle user roles, technician assignments, and repair history logs.",
-        "Built an intuitive, responsive frontend interface utilizing HTML, CSS, Bootstrap, and JavaScript for seamless ticket submission and status updates.",
-        "Implemented full CRUD functionality to streamline tracking, filtering, and updating active repair orders from intake to completion.",
+        "Developed a full-stack repair management platform to track maintenance tickets.",
+        "Architected a backend structure with a relational database to handle user roles, technician assignments, and repair logs.",
+        "Built an intuitive, responsive frontend interface for seamless ticket submission and status updates.",
+        "Implemented full CRUD functionality to streamline tracking, filtering, and updating active repair orders.",
       ],
       th: [
-        "พัฒนาแพลตฟอร์มจัดการงานซ่อมบำรุงแบบ Full-stack เพื่อติดตามใบแจ้งซ่อม สถานะอุปกรณ์ และขั้นตอนการให้บริการ",
-        "ออกแบบโครงสร้าง Backend ด้วยฐานข้อมูลเชิงสัมพันธ์ เพื่อจัดการบทบาทผู้ใช้ การมอบหมายช่างเทคนิค และประวัติการซ่อม",
-        "สร้างหน้า Frontend ที่ใช้งานง่ายด้วย HTML, CSS, Bootstrap และ JavaScript เพื่อการส่งใบแจ้งและอัปเดตสถานะที่ราบรื่น",
-        "ติดตั้งฟังก์ชัน CRUD แบบเต็มรูปแบบเพื่อเพิ่มประสิทธิภาพในการติดตาม กรอง และอัปเดตคำสั่งซ่อมที่ใช้งานอยู่ตั้งแต่เริ่มต้นจนเสร็จสิ้น",
+        "พัฒนาแพลตฟอร์มจัดการงานซ่อมบำรุงแบบ Full-stack เพื่อติดตามการแจ้งซ่อม",
+        "ออกแบบโครงสร้าง Backend ด้วยฐานข้อมูลเชิงสัมพันธ์ เพื่อจัดการบทบาทผู้ใช้ งานมอบหมายช่างเทคนิค และประวัติการซ่อม",
+        "สร้าง Frontend ที่ใช้งานง่ายด้วย HTML, CSS, Bootstrap และ JavaScript เพื่อการส่งการแจ้งซ่อมและการอัปเดตสถานะ",
+        "ใช้ฟังก์ชัน CRUD เพื่อใช้ในการสร้าง อ่าน อัปเดต และลบคำสั่งซ่อม",
       ],
     },
     links: [

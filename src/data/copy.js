@@ -1,7 +1,7 @@
 export const copy = {
   nav: {
     start: { en: "START", th: "หน้าแรก" },
-    about: { en: "ABOUT ME", th: "เกี่ยวกับฉัน" },
+    skills: { en: "SKILLS", th: "ทักษะ" },
     works: { en: "WORKS", th: "ผลงาน" },
     contact: { en: "CONTACT", th: "ติดต่อ" },
   },
@@ -9,13 +9,6 @@ export const copy = {
     greeting: { en: "HELLO, MY NAME IS", th: "สวัสดีครับ ผม" },
     nameLine1: { en: "PANU", th: "ภานุ" },
     nameLine2: { en: "WASANAPITRANONT", th: "วาสนาพิตรานนท์" },
-    subtitle: {
-      en: "ELECTRONIC ENGINEERING (COMPUTER) STUDENT",
-      th: "นักศึกษาวิศวกรรมอิเล็กทรอนิกส์แขนงคอมพิวเตอร์",
-    },
-  },
-  about: {
-    title: { en: "ABOUT ME", th: "เกี่ยวกับฉัน" },
     lead: {
       en: "Electronic Engineering student with a strong aptitude for Full Stack Development.",
       th: "นักศึกษาวิศวกรรมอิเล็กทรอนิกส์ที่มีความถนัดด้าน Full Stack Development",
@@ -25,31 +18,67 @@ export const copy = {
       th: "กำลังมองหาสถานที่ฝึกงานเพื่อมีส่วนร่วมในโปรเจกต์ทางเทคนิคและพัฒนาความเชี่ยวชาญในสายอาชีพ",
     },
     github: { en: "GITHUB PROFILE", th: "โปรไฟล์ GITHUB" },
-    skillsTitle: { en: "SKILLS", th: "ทักษะ" },
-    skills: [
+  },
+  skills: {
+    title: { en: "SKILLS", th: "ทักษะ" },
+    cards: [
       {
         heading: { en: "PROGRAMMING", th: "การเขียนโปรแกรม" },
-        items: "Python, C, Java, MATLAB, Mobile Development (Flutter & Dart)",
+        items: [
+          { icon: "/assets/skills-icon/python.svg", label: "Python" },
+          { icon: "/assets/skills-icon/c.svg", label: "C" },
+          { icon: "/assets/skills-icon/java.svg", label: "Java" },
+          { icon: "/assets/skills-icon/matlab.svg", label: "MATLAB" },
+          { icon: "/assets/skills-icon/flutter.svg", label: "Flutter" },
+          { icon: "/assets/skills-icon/dart.svg", label: "Dart" },
+        ],
       },
       {
         heading: { en: "WEB DEVELOPMENT", th: "การพัฒนาเว็บ" },
-        items:
-          "Frontend (HTML, CSS, React, Bootstrap), Backend (PHP, Flask, FastAPI, REST API), Database (MySQL), UI/UX Design (Figma)",
+        items: [
+          { icon: "/assets/skills-icon/html.svg", label: "HTML" },
+          { icon: "/assets/skills-icon/css.svg", label: "CSS" },
+          { icon: "/assets/skills-icon/react.svg", label: "React" },
+          { icon: "/assets/skills-icon/bootstrap.svg", label: "Bootstrap" },
+          { icon: "/assets/skills-icon/php.svg", label: "PHP" },
+          { icon: "/assets/skills-icon/flask.svg", label: "Flask" },
+          { icon: "/assets/skills-icon/fastapi.svg", label: "FastAPI" },
+          { icon: "/assets/skills-icon/rest-api.svg", label: "REST API" },
+          { icon: "/assets/skills-icon/wordpress.svg", label: "WordPress" },
+          { icon: "/assets/skills-icon/mysql.svg", label: "MySQL" },
+          { icon: "/assets/skills-icon/figma.svg", label: "Figma" },
+        ],
       },
       {
         heading: { en: "SOFTWARE & TOOLS", th: "ซอฟต์แวร์และเครื่องมือ" },
-        items:
-          "Version Control (Git), Cloud & Deployment (Azure Cloud, Vercel, ngrok), Virtualization (VMWare), Network Simulation (Cisco Packet Tracer)",
+        items: [
+          { icon: "/assets/skills-icon/git.svg", label: "Git" },
+          { icon: "/assets/skills-icon/azure.svg", label: "Azure Cloud" },
+          { icon: "/assets/skills-icon/vercel.svg", label: "Vercel" },
+          { icon: "/assets/skills-icon/web-hosting.svg", label: "Web Hosting" },
+          { icon: "/assets/skills-icon/dns.svg", label: "DNS Management" },
+          { icon: "/assets/skills-icon/ngrok.svg", label: "ngrok" },
+          { icon: "/assets/skills-icon/vmware.svg", label: "VMware" },
+          { icon: "/assets/skills-icon/cisco.svg", label: "Cisco Packet Tracer" },
+        ],
       },
       {
-        heading: { en: "HARDWARE & ELECTRONICS", th: "ฮาร์ดแวร์และอิเล็กทรอนิกส์" },
-        items:
-          "PCB Design (EasyEDA), Microcontrollers (Arduino, ESP32), Logic Design (CircuitVerse), Soldering",
+        heading: { en: "HARDWARE", th: "ฮาร์ดแวร์" },
+        items: [
+          { icon: "/assets/skills-icon/easyeda.svg", label: "EasyEDA" },
+          { icon: "/assets/skills-icon/arduino.svg", label: "Arduino" },
+          { icon: "/assets/skills-icon/esp32.svg", label: "ESP32" },
+          { icon: "/assets/skills-icon/circuitverse.svg", label: "CircuitVerse" },
+          { icon: "/assets/skills-icon/soldering.svg", label: "Soldering" },
+        ],
       },
       {
         heading: { en: "MULTIMEDIA", th: "มัลติมีเดีย" },
-        items:
-          "Image Editing (Adobe Photoshop), Video Editing (DaVinci Resolve), Audio Editing (Audacity)",
+        items: [
+          { icon: "/assets/skills-icon/photoshop.svg", label: "Adobe Photoshop" },
+          { icon: "/assets/skills-icon/davinci-resolve.svg", label: "DaVinci Resolve" },
+          { icon: "/assets/skills-icon/audacity.svg", label: "Audacity" },
+        ],
       },
     ],
   },

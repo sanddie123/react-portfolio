@@ -1,0 +1,7 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#C2410C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Soldering">
+  <path d="M18 2l4 4"/>
+  <path d="M17 3l4 4-9.5 9.5-2.1-.4-.4-2.1L17 3z"/>
+  <path d="M9 15L3 21"/>
+  <path d="M5 19l2 2"/>
+  <circle cx="4" cy="20" r="0.5" fill="#C2410C" stroke="none"/>
+</svg>

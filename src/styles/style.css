@@ -118,11 +118,6 @@ section {
   z-index: 10;
 }
 
-.layout-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-}
 
 .reveal-on-scroll {
   opacity: 0;
@@ -362,10 +357,13 @@ header::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to right,
-      rgba(244, 245, 247, 0.95) 0%,
-      rgba(244, 245, 247, 0.4) 60%,
-      rgba(244, 245, 247, 0) 100%);
+  background: linear-gradient(
+    to right,
+    rgba(244, 245, 247, 0.98) 0%,
+    rgba(244, 245, 247, 0.88) 28%,
+    rgba(244, 245, 247, 0.45) 55%,
+    rgba(244, 245, 247, 0) 78%
+  );
   z-index: 2;
 }
 
@@ -373,9 +371,9 @@ header::before {
   position: relative;
   z-index: 3;
   border-left: 6px solid var(--enforcer-blue);
-  padding-left: 32px;
+  padding: 0 0 8px 24px;
   opacity: 0;
-  max-width: 85vw;
+  max-width: min(640px, 92vw);
 }
 
 .boot-complete .hero-content {
@@ -384,11 +382,11 @@ header::before {
 
 .greeting {
   font-family: "EuropeExtWebRegular", "Exo 2", "Kanit", sans-serif;
-  font-size: clamp(18px, 1.5vw, 28px);
+  font-size: clamp(14px, 1.1vw, 20px);
   font-weight: 400;
-  letter-spacing: 5px;
-  color: var(--text-dark);
-  margin: 0 0 12px 0;
+  letter-spacing: 3px;
+  color: rgb(70, 80, 90);
+  margin: 0 0 10px 0;
 }
 
 .name-title {
@@ -397,23 +395,73 @@ header::before {
   font-size: clamp(48px, 4.5vw, 100px);
   letter-spacing: 2px;
   color: var(--text-dark);
-  margin: 0;
+  margin: 0 0 8px 0;
   line-height: 1.1;
 }
 
-.subtitle {
-  font-family: "EuropeExtWebRegular", "Exo 2", "Kanit", sans-serif;
-  font-size: clamp(14px, 1.2vw, 22px);
-  letter-spacing: 3px;
+.hero-lead {
+  font-family: "Lato", "Kanit", sans-serif;
+  font-size: clamp(15px, 1.15vw, 18px);
   color: var(--text-dark);
   margin: 24px 0 0 0;
+  line-height: 1.6;
+  max-width: 36em;
+}
+
+.hero-body {
+  font-family: "Lato", "Kanit", sans-serif;
+  font-size: clamp(15px, 1.15vw, 18px);
+  color: rgb(70, 80, 90);
+  line-height: 1.6;
+  margin: 10px 0 0 0;
   font-weight: 400;
+  max-width: 36em;
+}
+
+.hero-github-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28px;
+  padding: 12px 22px;
+  font-size: clamp(11px, 0.9vw, 13px);
+  background-color: rgba(244, 245, 247, 0.7);
+  border: 1.5px solid rgb(70, 80, 90);
+  border-radius: 12px 0 12px 0;
+  font-family: "Lato", "Kanit", sans-serif;
+  letter-spacing: 2px;
+  color: rgb(70, 80, 90);
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+  width: fit-content;
+}
+
+.hero-github-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: rgb(70, 80, 90);
+  margin-right: 10px;
+  transition: fill 0.2s ease;
+}
+
+.hero-github-btn:hover {
+  background-color: var(--enforcer-blue);
+  border-color: var(--enforcer-blue);
+  color: #fff;
+}
+
+.hero-github-btn:hover svg {
+  fill: #fff;
 }
 
 /* =========================================
-   6. ABOUT SECTION (#about)
+   6. SKILLS SECTION (#skills)
    ========================================= */
-.about-section {
+.skills-section {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -421,33 +469,6 @@ header::before {
   background-color: var(--bg-light);
   position: relative;
   overflow: hidden;
-}
-
-.about-section::before,
-.about-section::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-}
-
-.about-section::before {
-  top: 5%;
-  left: 5%;
-  width: 40vw;
-  height: 40vw;
-  background: radial-gradient(circle,
-      rgba(0, 102, 255, 0.06) 0%,
-      transparent 60%);
-}
-
-.about-section::after {
-  bottom: 5%;
-  right: 10%;
-  width: 30vw;
-  height: 30vw;
-  background: radial-gradient(circle,
-      rgba(10, 20, 30, 0.04) 0%,
-      transparent 60%);
 }
 
 .ambient-geometry {
@@ -502,136 +523,120 @@ header::before {
   animation: drift-reverse 40s infinite linear;
 }
 
-.about-section .layout-grid {
-  align-items: start;
-}
-
-.about-section .reveal-on-scroll {
-  display: block;
-}
-
-.hud-panel {
-  background-color: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  border-top: 1px solid rgba(10, 20, 30, 0.2);
-  border-bottom: 1px solid rgba(10, 20, 30, 0.2);
-  border-radius: 0 4px 4px 0;
-  padding: 32px 40px;
-  position: relative;
-  box-shadow: 0 4px 24px rgba(10, 20, 30, 0.08);
-  display: block;
+.skills-wrap {
   width: 100%;
-  box-sizing: border-box;
+  z-index: 2;
 }
 
-.hud-panel.dark-accent {
-  border-left: 20px solid rgba(10, 20, 30, 0.85);
+.skills-wrap .section-title {
+  margin-bottom: 28px;
 }
 
-.hud-panel.blue-accent {
-  border-left: 20px solid rgba(0, 102, 255, 0.85);
+.skills-card-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px 12px;
 }
 
-.hud-title {
-  font-family: "EuropeExtWebRegular", "Exo 2", "Kanit", sans-serif;
-  font-weight: 500;
-  font-size: clamp(28px, 2.2vw, 40px);
-  letter-spacing: 4px;
-  color: var(--text-dark);
-  margin: 0 0 24px 0;
-}
-
-.hud-body {
-  display: block;
-}
-
-.hud-text {
-  display: block;
-}
-
-.lead-text {
-  font-size: clamp(18px, 1.5vw, 22px);
-  color: var(--text-dark);
-  margin: 0 0 16px 0;
-  line-height: 1.5;
-}
-
-.body-text {
-  font-size: clamp(15px, 1.3vw, 18px);
-  color: rgb(70, 80, 90);
-  line-height: 1.6;
-  margin: 0;
-  font-weight: 400;
-}
-
-.hud-action {
-  margin-top: 16px !important;
-}
-
-.about-github-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 20px;
-  font-size: clamp(11px, 0.9vw, 13px);
-  background-color: transparent;
-  border: 1.5px solid rgb(70, 80, 90);
-  border-radius: 12px 0 12px 0;
-  font-family: "Lato", "Kanit", sans-serif;
-  letter-spacing: 2px;
-  color: rgb(70, 80, 90);
-  text-transform: uppercase;
-  text-decoration: none;
+.skill-card {
+  background-color: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(10, 20, 30, 0.1);
+  border-radius: 4px;
+  padding: 14px 12px 12px;
+  box-shadow: 0 4px 20px rgba(10, 20, 30, 0.06);
+  min-width: 0;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-  width: fit-content;
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
-.about-github-btn svg {
-  width: 16px;
-  height: 16px;
-  fill: rgb(70, 80, 90);
-  margin-right: 10px;
-  transition: fill 0.2s ease;
+.skill-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(10, 20, 30, 0.1);
+  border-color: var(--enforcer-blue);
 }
 
-.about-github-btn:hover {
-  background-color: rgb(70, 80, 90);
-  color: var(--bg-light);
-}
-
-.about-github-btn:hover svg {
-  fill: var(--bg-light);
-}
-
-.skills-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.skill-inset-box {
-  background: transparent;
-  border: none;
-  padding: 0;
-  position: relative;
-}
-
-.skill-inset-box h3 {
-  font-size: clamp(11px, 0.9vw, 14px);
+.skill-card-title {
+  font-family: "EuropeExtWebRegular", "Exo 2", "Kanit", sans-serif;
+  font-size: clamp(10px, 0.75vw, 12px);
+  font-weight: 500;
   letter-spacing: 1.5px;
+  text-transform: uppercase;
   color: var(--text-dark);
-  margin: 0 0 6px 0;
+  margin: 0 0 10px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(10, 20, 30, 0.15);
+  transition: border-bottom-color 0.25s ease;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
-.skill-inset-box p {
-  font-size: clamp(14px, 1.1vw, 17px);
-  color: rgb(70, 80, 90);
+.skill-card:hover .skill-card-title {
+  border-bottom-color: var(--enforcer-blue);
+}
+
+.skill-list {
+  list-style: none;
   margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(12px, 0.85vw, 14px);
+  color: rgb(55, 65, 75);
+  line-height: 1.3;
   font-weight: 400;
-  line-height: 1.5;
+  min-width: 0;
+  padding: 7px 0;
+}
+
+.skill-row:last-child {
+  padding-bottom: 0;
+}
+
+.skill-row:first-child {
+  padding-top: 0;
+}
+
+.skill-row span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skill-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+@media screen and (max-width: 1024px) {
+  #skills.skills-section {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    align-items: flex-start;
+    padding: 100px 4% 50px;
+  }
+
+  .skills-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 16px;
+  }
+
+  .skill-card {
+    padding: 16px 14px 14px;
+  }
 }
 
 /* =========================================
@@ -892,19 +897,19 @@ header::before {
 .side-panel {
   position: absolute;
   top: 0;
-  right: -600px;
+  right: 0;
   width: 33.33vw;
   min-width: 450px;
   max-width: 600px;
   height: 100%;
   box-sizing: border-box;
-  background-color: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
+  background-color: var(--bg-light);
   border-left: 1px solid rgb(70, 80, 90);
   padding: 50px 40px;
   box-shadow: -10px 0 30px rgba(10, 20, 30, 0.1);
-  transition: right 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
   z-index: 2001;
   display: flex;
   flex-direction: column;
@@ -912,7 +917,158 @@ header::before {
 }
 
 .side-panel.open {
-  right: 0;
+  visibility: visible;
+}
+
+.side-panel.open:not(.closing) {
+  pointer-events: auto;
+  animation: panel-fade-in 343ms cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+.side-panel.open.closing {
+  pointer-events: none;
+  animation: panel-fade-out 400ms cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+/* Staggered children — hidden until reveal */
+.side-panel #panel-image,
+.side-panel .panel-title::before,
+.side-panel .panel-title::after {
+  opacity: 0;
+}
+
+.side-panel .panel-category,
+.side-panel .panel-title-text {
+  opacity: 0;
+}
+
+.side-panel #panel-desc,
+.side-panel #panel-tech-stack {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+}
+
+/* Step 3 buttons — chrome hidden via border; label uses wipe */
+.side-panel .sidebar-btn,
+.side-panel .close-btn {
+  border-color: transparent;
+}
+
+.side-panel .sidebar-btn .btn-label,
+.side-panel .close-btn .btn-label {
+  display: inline-block;
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+}
+
+/* Step 2 — image + bars + title wipe (7f / 200ms, delay 343ms) */
+.side-panel.open:not(.closing) #panel-image,
+.side-panel.open:not(.closing) .panel-title::before,
+.side-panel.open:not(.closing) .panel-title::after {
+  animation: panel-fade-reveal 200ms cubic-bezier(0.25, 1, 0.5, 1) 343ms both;
+}
+
+.side-panel.open:not(.closing) .panel-category,
+.side-panel.open:not(.closing) .panel-title-text {
+  animation: panel-title-fade-in 200ms cubic-bezier(0.25, 1, 0.5, 1) 343ms both;
+}
+
+/* Step 3 — desc / tech / buttons (16f / 457ms, delay 543ms) */
+.side-panel.open:not(.closing) #panel-desc,
+.side-panel.open:not(.closing) #panel-tech-stack {
+  animation: panel-wipe-in 457ms cubic-bezier(0.25, 1, 0.5, 1) 543ms both;
+}
+
+.side-panel.open:not(.closing) .sidebar-btn,
+.side-panel.open:not(.closing) .close-btn {
+  animation: panel-btn-chrome-fade 457ms cubic-bezier(0.25, 1, 0.5, 1) 543ms both;
+}
+
+.side-panel.open:not(.closing) .sidebar-btn .btn-label,
+.side-panel.open:not(.closing) .close-btn .btn-label {
+  animation: panel-wipe-in 457ms cubic-bezier(0.25, 1, 0.5, 1) 543ms both;
+}
+
+/* Close — keep content visible; panel opacity fades everything together */
+.side-panel.open.closing #panel-image,
+.side-panel.open.closing .panel-title::before,
+.side-panel.open.closing .panel-title::after,
+.side-panel.open.closing .panel-category,
+.side-panel.open.closing .panel-title-text,
+.side-panel.open.closing #panel-desc,
+.side-panel.open.closing #panel-tech-stack {
+  animation: none;
+  opacity: 1;
+  clip-path: none;
+}
+
+.side-panel.open.closing .sidebar-btn,
+.side-panel.open.closing .close-btn {
+  animation: none;
+  border-color: rgb(70, 80, 90);
+}
+
+.side-panel.open.closing .sidebar-btn .btn-label,
+.side-panel.open.closing .close-btn .btn-label {
+  animation: none;
+  opacity: 1;
+  clip-path: none;
+}
+
+@keyframes panel-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes panel-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes panel-fade-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes panel-title-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes panel-wipe-in {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes panel-btn-chrome-fade {
+  from {
+    border-color: transparent;
+  }
+  to {
+    border-color: rgb(70, 80, 90);
+  }
 }
 
 .panel-title {
@@ -1007,56 +1163,71 @@ header::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(10, 20, 30, 0.5);
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>');
+  background-color: rgba(255, 255, 255, 0.55);
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23000000"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 40px 40px;
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
+  z-index: 5;
 }
 
 #panel-image:hover::after {
   opacity: 1;
 }
 
-.panel-arrow {
+.panel-pager {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
   z-index: 20;
-  opacity: 1;
-  background-color: transparent;
-  border: 1.5px solid var(--text-dark);
-  margin: 0 10px;
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1.5px solid #000000;
+  background-color: #000000;
 }
 
-.panel-arrow.prev-arrow {
-  left: 0;
+.panel-pager-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 
-.panel-arrow.next-arrow {
-  right: 0;
-}
-
-.panel-arrow svg {
-  fill: var(--text-dark);
-  transition: fill 0.3s ease;
-}
-
-#panel-image:hover .panel-arrow:not(.hidden-arrow),
-#panel-image .panel-arrow:hover:not(.hidden-arrow) {
-  background-color: var(--text-dark);
-  border-color: var(--text-dark);
-}
-
-#panel-image:hover .panel-arrow:not(.hidden-arrow) svg,
-#panel-image .panel-arrow:hover:not(.hidden-arrow) svg {
+.panel-pager-btn svg {
+  width: 20px;
+  height: 20px;
   fill: #ffffff;
+  display: block;
+}
+
+.panel-pager-count {
+  min-width: 3.2em;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-pager.hidden-pager {
+  display: none;
 }
 
 .panel-desc {
@@ -1182,7 +1353,7 @@ header::before {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(10, 20, 30, 0.4);
+  background-color: rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   z-index: 9999;
@@ -1229,6 +1400,7 @@ header::before {
 }
 
 .modal-image-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1236,6 +1408,22 @@ header::before {
   height: 100%;
   padding: 40px 120px;
   box-sizing: border-box;
+  background-color: transparent;
+}
+
+.modal-image-frame {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  line-height: 0;
+}
+
+#modal-pager {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 10001;
 }
 
 #enlarged-image {
@@ -1817,11 +2005,27 @@ a.info-value:hover {
   }
 
   .hero-content {
-    padding-left: 16px;
+    padding: 0 0 6px 14px;
+    max-width: min(640px, 92vw);
   }
 
   .greeting {
-    font-size: 18px;
+    font-size: 13px;
+    letter-spacing: 2.5px;
+  }
+
+  .hero-lead {
+    font-size: 15px;
+    margin-top: 18px;
+  }
+
+  .hero-body {
+    font-size: 15px;
+  }
+
+  .hero-github-btn {
+    margin-top: 22px;
+    padding: 11px 18px;
   }
 
   .section-title {
@@ -1834,34 +2038,37 @@ a.info-value:hover {
     letter-spacing: 2px;
   }
 
-  /* --- D. ABOUT SECTION (#about) --- */
-  .layout-grid {
+  /* --- D. SKILLS SECTION (#skills) --- */
+  #skills.skills-section {
+    height: auto !important;
+    min-height: 100vh !important;
+    padding: 100px 5% 50px 5% !important;
+    align-items: flex-start;
+  }
+
+  .skills-wrap .section-title {
+    margin-bottom: 24px;
+  }
+
+  .skills-card-grid {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 14px;
   }
 
-  .hud-panel {
-    padding: 24px 20px;
-    width: 100%;
-    box-sizing: border-box;
+  .skill-card {
+    padding: 16px 14px 12px;
   }
 
-  .lead-text {
-    font-size: 17px;
+  .skill-card:hover {
+    transform: none;
   }
 
-  .body-text {
-    font-size: 15px;
-  }
-
-  .skill-inset-box h3 {
-    margin-bottom: 6px;
-    font-size: 11px;
-  }
-
-  .skill-inset-box p {
-    line-height: 1.6;
+  .skill-row {
     font-size: 14px;
+  }
+
+  .skill-row span:last-child {
+    white-space: normal;
   }
 
   /* --- E. PROJECT SECTION (#project) --- */
@@ -1962,6 +2169,7 @@ a.info-value:hover {
     fill: var(--text-dark) !important;
   }
 
+  /* Mobile: original slide-in/out (no fade/wipe stagger) */
   .side-panel {
     position: fixed !important;
     top: 0;
@@ -1969,8 +2177,52 @@ a.info-value:hover {
     width: 100vw;
     min-width: 100vw;
     right: -100vw;
+    opacity: 1;
     padding: 60px 20px 40px 20px;
     z-index: 9999;
+    transition: right 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    animation: none !important;
+  }
+
+  .side-panel.open:not(.closing),
+  .side-panel.open.closing {
+    animation: none !important;
+    opacity: 1;
+  }
+
+  .side-panel.open:not(.closing) {
+    right: 0;
+    pointer-events: auto;
+  }
+
+  .side-panel.open.closing {
+    right: -100vw;
+    pointer-events: none;
+  }
+
+  #panel-image,
+  .modal-image-frame {
+    touch-action: pan-y;
+  }
+
+  .side-panel #panel-image,
+  .side-panel .panel-title::before,
+  .side-panel .panel-title::after,
+  .side-panel .panel-category,
+  .side-panel .panel-title-text,
+  .side-panel #panel-desc,
+  .side-panel #panel-tech-stack,
+  .side-panel .sidebar-btn .btn-label,
+  .side-panel .close-btn .btn-label {
+    opacity: 1 !important;
+    clip-path: none !important;
+    animation: none !important;
+  }
+
+  .side-panel .sidebar-btn,
+  .side-panel .close-btn {
+    border-color: rgb(70, 80, 90) !important;
+    animation: none !important;
   }
 
   .panel-title {
@@ -1986,38 +2238,43 @@ a.info-value:hover {
     margin-bottom: 8px;
   }
 
-  .panel-arrow.prev-arrow {
-    left: 10px !important;
-  }
-
-  .panel-arrow.next-arrow {
-    right: 10px !important;
-  }
-
   .image-modal {
     flex-wrap: wrap;
     align-content: center;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
     padding: 0 !important;
     box-sizing: border-box !important;
-    -webkit-backface-visibility: hidden !important;
-    backface-visibility: hidden !important;
-    -webkit-transform: translateZ(0) !important;
-    transform: translateZ(0) !important;
-    will-change: backdrop-filter;
   }
 
   .modal-image-wrapper {
     order: 1;
     width: 100%;
-    height: auto !important;
+    max-width: 100%;
+    height: 100% !important;
+    min-height: 100dvh;
     padding: 0 16px !important;
     box-sizing: border-box !important;
+    overflow: hidden;
+  }
+
+  .modal-image-frame {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   #enlarged-image,
   #enlarged-video {
-    width: 100vw !important;
-    max-width: 100vw !important;
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+    height: auto !important;
+    max-height: calc(100dvh - 96px) !important;
+    object-fit: contain;
     border-radius: 0 !important;
     border: none !important;
   }

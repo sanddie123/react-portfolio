@@ -4,7 +4,7 @@ import { scrollToSection } from "../hooks/useSnapScroll";
 
 const NAV_ITEMS = [
   { href: "#start", label: copy.nav.start },
-  { href: "#about", label: copy.nav.about },
+  { href: "#skills", label: copy.nav.skills },
   { href: "#project", label: copy.nav.works },
   { href: "#contact", label: copy.nav.contact },
 ];

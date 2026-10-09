@@ -156,10 +156,10 @@ export default function Contact() {
             <div className="info-item">
               <span className="info-label">{t(copy.contact.email, language)}</span>
               <a
-                href="mailto:panuwasanapitranont@gmail.com?subject=Reaching%20out%20from%20your%20portfolio"
+                href="mailto:panu.wasanapitranont@gmail.com?subject=Reaching%20out%20from%20your%20portfolio"
                 className="info-value link-with-arrow"
               >
-                panuwasanapitranont@gmail.com
+                panu.wasanapitranont@gmail.com
                 <svg viewBox="0 0 24 24" className="link-arrow">
                   <path d="M7 17L17 7M17 7H8M17 7V16" />
                 </svg>

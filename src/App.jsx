@@ -6,7 +6,7 @@ import LangToggle from "./components/LangToggle";
 import DesktopNav from "./components/DesktopNav";
 import MobileNav from "./components/MobileNav";
 import Hero from "./components/Hero";
-import About from "./components/About";
+import Skills from "./components/Skills";
 import Works from "./components/Works";
 import Contact from "./components/Contact";
 
@@ -33,7 +33,7 @@ function AppShell() {
       <MobileNav />
       <main>
         <Hero />
-        <About />
+        <Skills />
         <Works />
         <Contact />
       </main>
