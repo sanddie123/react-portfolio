@@ -2243,9 +2243,11 @@ a.info-value:hover {
     align-content: center;
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden;
+    height: 100dvh;
+    overflow: visible;
     padding: 0 !important;
     box-sizing: border-box !important;
+    background-color: rgba(255, 255, 255, 0.22);
   }
 
   .modal-image-wrapper {
